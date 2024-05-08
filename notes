@@ -1,0 +1,41 @@
+add
+<?php
+if($_SERVER['REQUEST_METHOD'] == "POST"){
+    include "koneksi.php";
+
+    $nama = $_FILES['foto']['name'];
+    $file_tmp = $_FILES['foto']['tmp_name'];
+    $n_random = rand(1, 9999);
+    $nama_baru = $n_random. '-' .$nama;
+    $folder = "./pages/product/foto_produk";
+
+    move_uploaded_file($file_tmp, $folder . $nama_baru);
+
+    $query = mysqli_query($connect, "insert into tbl_produk (nama_produk, merk, deskripsi, foto, harga) values ('$_POST[nama_produk]', '$_POST[merk]', '$_POST[deskripsi]', '$_POST[foto]', '$_POST[harga]', $nama_baru)");
+
+    echo "<script>
+            alert('Data Berhasil Ditambahkan');
+            document.location='?page=product.php';
+        </script>";
+}
+?>
+
+
+product
+
+<?php
+include 'koneksi.php';
+$no = 1; 
+$ambilData = mysqli_query($connect, "select * from tbl_produk");
+while ($data = mysqli_fetch_array($ambilData)){
+    echo"<tr>";
+    echo"<td>$no</td>";
+    echo"<td>$data[nama_produk]</td>";
+    echo"<td>$data[merk]</td>";
+    echo"<td>$data[deskripsi]</td>";
+    echo"<td>$data[foto]</td>";
+    echo"<td>$data[harga]</td>";
+    echo"<td><a href='' class='btn btn-warning'>Edit</a> <a href='' onclick='' class='btn btn-danger'></a></td>";
+}
+?>
+
